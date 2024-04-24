@@ -6,6 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get free Summarization of your Document, text and Image here.</title>
     <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        .loading {
+            display: none;
+        }
+        .loading.active {
+            text-align: center;
+            display: block;
+        }
+        .block {
+            display: block;
+            margin: 0 auto;
+            width: 50%;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,14 +31,19 @@
             <input type="file" id="fileInput" name="file">
             <input type="submit" value="Summarize">
         </form>
+        <div class="block">
+            <img src="./loading.gif" alt="Loading..." id="loadingSpinner" class="loading">
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const summaryElement = document.getElementById('summaryOutput');
         const summaryForm = document.getElementById('summaryForm');
+        const loadingSpinner = document.getElementById('loadingSpinner');
 
         summaryForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            loadingSpinner.classList.add('active');
 
             const text = document.getElementById('textInput').value;
             const fileInput = document.getElementById('fileInput').files[0];
@@ -32,6 +51,7 @@
             try {
                 if (text.trim() !== '' && fileInput) {
                     console.error('Please provide either text or file, not both.');
+                    loadingSpinner.classList.remove('active');
                     return;
                 }
 
@@ -59,6 +79,8 @@
             } catch (error) {
                 console.error('Error:', error);
                 summaryElement.textContent = 'Error occurred while summarizing.';
+            } finally {
+                loadingSpinner.classList.remove('active');
             }
         });
     </script>
